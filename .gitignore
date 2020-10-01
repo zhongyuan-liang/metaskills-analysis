@@ -87,3 +87,6 @@ target/
 
 # Mypy cache
 .mypy_cache/
+
+# data (copy the data to your local machine, but do NOT commit it)
+data/
