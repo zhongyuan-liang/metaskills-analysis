@@ -1,7 +1,12 @@
-yes
+Metaskills analysis
 ==============================
 
-A short description of the project.
+This repo contains code needed to reproduce analysis and figures generated from metaskills deployments in CSC148, Winter 2019. The Project Organization section below contains an outline of what should go where (note that some of these directories will not be needed). 
+
+To ensure that work is reproducible, we will be using a virtual environment, [venv](https://docs.python.org/3/library/venv.html). A guide can be found [here](https://aaronlelevier.github.io/virtualenv-cheatsheet/). Please save all dependencies when they change, i.e. do `pip freeze > requirements.txt`. 
+
+Note that this repository is NOT for storing data - if you need access to data, ask Emmy to share the data with you on OneDrive. This is due to REB restrictions. 
+
 
 Project Organization
 ------------
@@ -53,5 +58,3 @@ Project Organization
 
 
 --------
-
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
