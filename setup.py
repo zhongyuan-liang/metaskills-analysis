@@ -7,4 +7,11 @@ setup(
     description='A short description of the project.',
     author='nightingal3',
     license='MIT',
+    install_requires=[
+        "Click"
+    ],
+    entry_points='''
+        [console_scripts]
+        clean=src.data.clean_metaskills:clean
+    '''
 )
