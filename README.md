@@ -7,6 +7,10 @@ To ensure that work is reproducible, we will be using a virtual environment, [ve
 
 Note that this repository is NOT for storing data - if you need access to data, ask Emmy to share the data with you on OneDrive. This is due to REB restrictions. 
 
+Setup
+------------
+1. Download the data from OneDrive and create the `data` directory as shown in the Project Organization section. Unzip the files and place the csv files into `data/raw`. Rename the CSVs to `Metaskills_x`, `Mid_semester_survey`, and `Final_survey`.
+
 
 Project Organization
 ------------
