@@ -10,7 +10,7 @@ Note that this repository is NOT for storing data - if you need access to data, 
 Setup
 ------------
 1. Download the data from OneDrive and create the `data` directory as shown in the Project Organization section. Unzip the files and place the csv files into `data/raw`. Rename the CSVs to `Metaskills_x`, `Mid_semester_survey`, and `Final_survey`.
-
+2. Follow the instructions in the guide above to set up the virtual environment.
 
 Project Organization
 ------------
