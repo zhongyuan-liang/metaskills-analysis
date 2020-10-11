@@ -10,8 +10,10 @@ setup(
     install_requires=[
         "Click"
     ],
-    entry_points='''
-        [console_scripts]
-        clean=src.data.clean_metaskills:clean
-    '''
+    entry_points={
+        "console_scripts": [
+            "clean=src.data.clean_metaskills:clean",
+            "anonymize=src.data.anonymize_utorid:anonymize"
+        ]
+    }
 )
