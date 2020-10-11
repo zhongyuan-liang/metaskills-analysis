@@ -6,21 +6,23 @@ import pandas as pd
 from dotenv import find_dotenv, load_dotenv
 from typing import List
 
-PERSONAL_INFO_COLS = [
-    "Q62_1",
-    "Q62_3",
-    "Q14_Browser",
-    "Q14_Version",
-    "Q14_Operating System",
-    "Q14_Resolution",
-    "Q120",
-    "IPAddress",
-    "RecipientLastName",
-    "RecipientFirstName",
-    "RecipientEmail",
-    "LocationLatitude",
-    "LocationLongitude"
-]
+PERSONAL_INFO_COLS = {
+    1: [
+        "Q62_1",
+        "Q62_3",
+        "Q14_Browser",
+        "Q14_Version",
+        "Q14_Operating System",
+        "Q14_Resolution",
+        "Q120",
+        "IPAddress",
+        "RecipientLastName",
+        "RecipientFirstName",
+        "RecipientEmail",
+        "LocationLatitude",
+        "LocationLongitude"
+    ]
+}
 
 @click.command()
 @click.argument('survey_number', type=click.INT, default=1)
@@ -28,9 +30,6 @@ PERSONAL_INFO_COLS = [
 @click.option('-c', '--consent_filepath', type=click.Path(), default="data/raw/classlist_consent/consenters_any.csv")
 @click.option('-i', '--id_col', type=click.STRING, default="Q62_2")
 def clean(survey_number: int, output_filepath: str, consent_filepath: str, id_col: str) -> None:
-    """ Runs data processing scripts to turn raw data from (../raw) into
-        cleaned data ready to be analyzed (saved in ../processed).
-    """
     logger = logging.getLogger(__name__)
     logger.info(f"cleaning metaskills #{survey_number}...")
     
@@ -43,7 +42,7 @@ def clean(survey_number: int, output_filepath: str, consent_filepath: str, id_co
     click.echo(df.columns)
 
     df = remove_non_consenters(df, consenters, id_col)
-    df = remove_personal_info_cols(df)
+    df = remove_personal_info_cols(df, survey_number)
     click.echo(df)
     click.echo(df.columns)
 
@@ -56,8 +55,8 @@ def extract_q_text(df: pd.DataFrame) -> dict:
 def remove_non_consenters(df: pd.DataFrame, consenter_list: List, id_col: str) -> pd.DataFrame:
     return df[df[id_col].isin(consenter_list)]
 
-def remove_personal_info_cols(df: pd.DataFrame) -> pd.DataFrame:
-    return df.drop(axis=1, labels=PERSONAL_INFO_COLS)
+def remove_personal_info_cols(df: pd.DataFrame, survey_number: int) -> pd.DataFrame:
+    return df.drop(axis=1, labels=PERSONAL_INFO_COLS[survey_number])
 
 
 if __name__ == '__main__':
