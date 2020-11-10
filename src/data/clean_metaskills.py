@@ -21,6 +21,86 @@ PERSONAL_INFO_COLS = {
         "RecipientEmail",
         "LocationLatitude",
         "LocationLongitude"
+    ],
+    2: [
+        "Q10_1",
+        "Q10_3",
+        "Q12_Browser",
+        "Q12_Version",
+        "Q12_Operating System",
+        "Q12_Resolution",
+        "Q108_1",
+        "Q168",
+        "IPAddress",
+        "RecipientLastName",
+        "RecipientFirstName",
+        "RecipientEmail",
+        "LocationLatitude",
+        "LocationLongitude"
+    ],
+    3: [
+        "Q10_1",
+        "Q10_3",
+        "Q168",
+        "Q523_Browser",
+        "Q523_Version",
+        "Q523_Operating System",
+        "Q523_Resolution",
+        "IPAddress",
+        "RecipientLastName",
+        "RecipientFirstName",
+        "RecipientEmail",
+        "LocationLatitude",
+        "LocationLongitude"
+    ],
+    4: [
+        "Q10_1",
+        "Q10_3",
+        "Q523_Browser",
+        "Q523_Version",
+        "Q523_Operating System",
+        "Q523_Resolution",
+        "Q168",
+        "IPAddress",
+        "RecipientLastName",
+        "RecipientFirstName",
+        "RecipientEmail",
+        "LocationLatitude",
+        "LocationLongitude"
+    ], 
+    5: [
+        "Q10_1",
+        "Q10_3",
+        "Q523_Browser",
+        "Q523_Version",
+        "Q523_Operating System",
+        "Q523_Resolution",
+        "Q168",
+        "IPAddress",
+        "RecipientLastName",
+        "RecipientFirstName",
+        "RecipientEmail",
+        "LocationLatitude",
+        "LocationLongitude"
+    ], 
+    6: [
+        "Q10_1",
+        "Q10_3",
+        "Q523_Browser",
+        "Q523_Version",
+        "Q523_Operating System",
+        "Q523_Resolution",
+        "Q168",
+        "IPAddress",
+        "RecipientLastName",
+        "RecipientFirstName",
+        "RecipientEmail",
+        "LocationLatitude",
+        "LocationLongitude"
+    ],
+    7: [ #There is no metaskills 7 - this is the grades sheet
+        "Student",
+        "ID"
     ]
 }
 
@@ -34,7 +114,9 @@ def clean(survey_number: int, output_filepath: str, consent_filepath: str, id_co
     logger.info(f"cleaning metaskills #{survey_number}...")
     
     metaskills_path = f"data/interim/Metaskills_{survey_number}.csv"
-    df = pd.read_csv(metaskills_path)
+    if survey_number == 7:
+        metaskills_path = "data/interim/grades.csv"
+    df = pd.read_csv(metaskills_path) 
     consenters = list(pd.read_csv(consent_filepath)["student_id"])
     num_to_text_map = extract_q_text(df)
 
