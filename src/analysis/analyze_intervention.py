@@ -39,7 +39,7 @@ def drop_unfinished(df: pd.DataFrame, completion_col: str) -> pd.DataFrame:
     return df.loc[df[completion_col] == True]
 
 def drop_after_midterm(df: pd.DataFrame, midterm_date_col: str) -> pd.DataFrame:
-    return df.loc[df[midterm_date_col] == "before midterm"]
+    return df.loc[df[midterm_date_col] == "before test"]
 
 def drop_low_time(df: pd.DataFrame, time_col: str, min_time: int = 0.1) -> pd.DataFrame:
     return df.loc[df[time_col] >= min_time]
