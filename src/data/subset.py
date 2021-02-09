@@ -1,4 +1,5 @@
 import pandas as pd
+import pdb
 
 from src.analysis.analyze_intervention import join_w_grades, compare_treatment, drop_unfinished, drop_after_midterm
 
@@ -27,7 +28,8 @@ def stress_specific_intervention_and_grades(intervention_letter: str) -> tuple:
     intervention_letter = intervention_letter.upper()
     if intervention_letter not in ["A", "B", "C", "D", "E", "F"]:
         raise ValueError("Intervention letter must be in range A...F")
-
+    
+    df = META_1_AND_MIDTERM
     stress_yes = df.loc[df[f"stress_{intervention_letter}"] == "yes"]["Midterm Current Score"].dropna()
     stress_no = df.loc[df[f"stress_{intervention_letter}"] == "no"]["Midterm Current Score"].dropna()
 
@@ -35,8 +37,8 @@ def stress_specific_intervention_and_grades(intervention_letter: str) -> tuple:
 
 def stress_intervention_and_grades(by_year: bool = False) -> tuple:
     df = META_1_AND_MIDTERM
-    grades_stress_yes, grades_stress_no = compare_treatment(df, "show_stress", "Midterm Current Score")
-    grades_stress_yes, grades_stress_no = grades_stress_yes.dropna(), grades_stress_no.dropna()
+    grades_stress_yes = df.loc[df["show_stress"] == "yes"]
+    grades_stress_no = df.loc[df["show_stress"] == "no"]
 
     grades_stress_yes, grades_stress_no = grades_stress_yes.dropna(subset=["Q216", "Midterm Current Score"]), grades_stress_no.dropna(subset=["Q216", "Midterm Current Score"])
 
@@ -92,10 +94,30 @@ def stress_intervention_and_midterm_grade_by_language_ability():
     raise NotImplementedError
 
 def stress_intervention_and_midterm_grade_by_gender():
-    raise NotImplementedError
+    df = META_1_AND_MIDTERM
+    grades_stress_yes = df.loc[df["show_stress"] == "yes"]
+    grades_stress_no = df.loc[df["show_stress"] == "no"]
+
+    grades_stress_yes_male = grades_stress_yes.loc[grades_stress_yes["gender"] == "Male"]
+    grades_stress_no_male = grades_stress_no.loc[grades_stress_no["gender"] == "Male"]
+
+    grades_stress_yes_female = grades_stress_yes.loc[grades_stress_yes["gender"] == "Female"]
+    grades_stress_no_female = grades_stress_no.loc[grades_stress_no["gender"] == "Female"]
+
+    grades_stress_yes_male = grades_stress_yes_male["Midterm Current Score"].dropna().astype(int)
+    grades_stress_yes_female = grades_stress_yes_female["Midterm Current Score"].dropna().astype(int)
+    
+    grades_stress_no_male = grades_stress_no_male["Midterm Current Score"].dropna().astype(int)
+    grades_stress_no_female = grades_stress_no_female["Midterm Current Score"].dropna().astype(int)
+
+    return grades_stress_yes_male, grades_stress_no_male, grades_stress_yes_female, grades_stress_no_female
+
 
 def stress_intervention_and_midterm_grade_by_growth_mindset():
     raise NotImplementedError
+
+if __name__ == "__main__":
+    stress_intervention_and_grades("A")
 
 
 

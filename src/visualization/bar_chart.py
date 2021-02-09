@@ -11,6 +11,7 @@ from math import sqrt
 
 
 from src.analysis.analyze_intervention import join_w_grades, compare_treatment, drop_unfinished
+from src.data.subset import *
 
 agree = ["Slightly Agree", "Somewhat Agree", "Mostly Agree", "Strongly Agree"]
 disagree = ["Strongly Disagree", "Mostly Disagree", "Somewhat Disagree", "Slightly Disagree"]
@@ -50,6 +51,10 @@ def bar_chart(title: str, filename: str, **group_data: pd.Series) -> None:
     fig.tight_layout()
     plt.savefig(filename)
 
+def cohens_d(first_group, second_group) -> float:
+    return (first_group.mean() - second_group.mean()) / (sqrt((first_group.std() ** 2 + second_group.std() ** 2) / 2))
+
+
 def label_on_bar(ax: matplotlib.axes.Axes, rects: matplotlib.container.BarContainer, sample_sizes: List, means: List, sems: List) -> None:
     for i, rect in enumerate(rects):
         height = rect.patches[0].get_height()
@@ -58,6 +63,15 @@ def label_on_bar(ax: matplotlib.axes.Axes, rects: matplotlib.container.BarContai
         ax.annotate(info_str, xy=(rect.patches[0].get_x() + rect.patches[0].get_width() / 10, height / 2))
 
 if __name__ == "__main__":
+    grades_stress_yes_male, grades_stress_no_male, grades_stress_yes_female, grades_stress_no_female = stress_intervention_and_midterm_grade_by_gender()
+    total_students = len(grades_stress_yes_female) +  len(grades_stress_no_female) 
+    _, p_val = mannwhitneyu(grades_stress_yes_female, grades_stress_no_female)
+    bar_chart(f"Average Midterm grade\n based on stress intervention for female students\n(N={total_students}, p={p_val})","stress_female.png", **{"Received stress intervention female": grades_stress_yes_female, 
+    #"Received stress intervention female": grades_stress_yes_female, 
+    "Did not receive \nstress intervention female": grades_stress_no_female, })
+    print(cohens_d(grades_stress_yes_female, grades_stress_no_female))
+    #"Did not receive \nstress intervention female": grades_stress_no_female})
+    assert False
     grades_fpath = "data/interim/cleaned_grades.csv"
     metaskills_fpath = "data/interim/cleaned_metaskills_1.csv"
     metaskills_2_fpath = "data/interim/cleaned_metaskills_2.csv"
