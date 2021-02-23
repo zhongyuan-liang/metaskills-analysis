@@ -1,7 +1,7 @@
 import pandas as pd
 import pdb
 
-from src.analysis.analyze_intervention import join_w_grades, compare_treatment, drop_unfinished, drop_after_midterm
+from src.analysis.analyze_intervention import join_w_grades, compare_treatment, drop_unfinished, drop_after_midterm, drop_low_time
 
 grades_fpath = "data/interim/cleaned_grades.csv"
 metaskills_fpath = "data/interim/cleaned_metaskills_1.csv"
@@ -14,30 +14,48 @@ df = drop_after_midterm(df, "survey_taken")
 
 META_1 = df.copy()
 
+df = drop_low_time(df, "stress_int_minutes")
+
+META_1_ENGAGED = df.copy()
+
 df_midterm_survey = pd.read_csv(midterm_survey_fpath)
-df = pd.merge(df, df_midterm_survey, how="inner", left_on="Q62_2", right_on="Q2_2_TEXT")
+df = pd.merge(META_1, df_midterm_survey, how="inner", left_on="Q62_2", right_on="Q2_2_TEXT")
 
 META_1_AND_MIDTERM = df.copy()
 
+META_1_AND_MIDTERM_ENGAGED = pd.merge(META_1_ENGAGED, df_midterm_survey, how="inner", left_on="Q62_2", right_on="Q2_2_TEXT")
+
 df_2 = pd.read_csv(metaskills_2_fpath)
 df_2 = drop_unfinished(df_2, "Finished")
+META_2 = df_2.copy()
 META_1_AND_META_2 = pd.merge(META_1, df_2, how="inner", left_on="Q62_2", right_on="Q10_2")
+META_1_AND_META_2_ENGAGED = pd.merge(META_1_ENGAGED, df_2, how="inner", left_on="Q62_2", right_on="Q10_2")
 
+META_1_2_AND_MIDTERM = pd.merge(META_1_AND_MIDTERM, META_2, how="inner", left_on="Q62_2", right_on="Q10_2")
+META_1_2_AND_MIDTERM_ENGAGED = pd.merge(META_1_AND_MIDTERM_ENGAGED, META_2, how="inner", left_on="Q62_2", right_on="Q10_2")
 
-def stress_specific_intervention_and_grades(intervention_letter: str) -> tuple:
+def stress_specific_intervention_and_grades(intervention_letter: str, engaged: bool = False) -> tuple:
     intervention_letter = intervention_letter.upper()
     if intervention_letter not in ["A", "B", "C", "D", "E", "F"]:
         raise ValueError("Intervention letter must be in range A...F")
-    
-    df = META_1_AND_MIDTERM
+    if engaged:
+        df = META_1_AND_MIDTERM_ENGAGED
+    else:
+        df = META_1_AND_MIDTERM
     stress_yes = df.loc[df[f"stress_{intervention_letter}"] == "yes"]["Midterm Current Score"].dropna()
     stress_no = df.loc[df[f"stress_{intervention_letter}"] == "no"]["Midterm Current Score"].dropna()
 
     return stress_yes, stress_no
 
-def stress_intervention_and_grades(by_year: bool = False) -> tuple:
-    df = META_1_AND_MIDTERM
-    grades_stress_yes = df.loc[df["show_stress"] == "yes"]
+def stress_intervention_and_grades(by_year: bool = False, engaged: bool = False) -> tuple:
+    if engaged:
+        df_engaged = META_1_2_AND_MIDTERM_ENGAGED
+        df = META_1_2_AND_MIDTERM
+    else:
+        df_engaged = META_1_2_AND_MIDTERM
+        df = META_1_2_AND_MIDTERM
+
+    grades_stress_yes = df_engaged.loc[df_engaged["show_stress"] == "yes"]
     grades_stress_no = df.loc[df["show_stress"] == "no"]
 
     grades_stress_yes, grades_stress_no = grades_stress_yes.dropna(subset=["Q216", "Midterm Current Score"]), grades_stress_no.dropna(subset=["Q216", "Midterm Current Score"])
@@ -51,12 +69,17 @@ def stress_intervention_and_grades(by_year: bool = False) -> tuple:
     if by_year:
         return stress_first_year, no_stress_first_year, stress_other, no_stress_other
 
-    return grades_stress_yes, grades_stress_no
+    return grades_stress_yes["Midterm Current Score"], grades_stress_no["Midterm Current Score"]
 
-def stress_intervention_and_stress_question(divide_by_year: bool = False) -> tuple:
-    df = META_1_AND_META_2
+def stress_intervention_and_stress_question(divide_by_year: bool = False, engaged: bool = False) -> tuple:
+    if engaged:
+        df_engaged = META_1_2_AND_MIDTERM_ENGAGED
+        df = META_1_2_AND_MIDTERM
+    else:
+        df = META_1_2_AND_MIDTERM
+        df_engaged = df
 
-    grades_stress_yes = df.loc[df["show_stress"] == "yes"]
+    grades_stress_yes = df_engaged.loc[df_engaged["show_stress"] == "yes"]
     grades_stress_no = df.loc[df["show_stress"] == "no"]
 
     grades_stress_yes = grades_stress_yes.dropna(subset=["Q51_y"])
@@ -93,9 +116,15 @@ def student_year_and_enjoyment():
 def stress_intervention_and_midterm_grade_by_language_ability():
     raise NotImplementedError
 
-def stress_intervention_and_midterm_grade_by_gender():
-    df = META_1_AND_MIDTERM
-    grades_stress_yes = df.loc[df["show_stress"] == "yes"]
+def stress_intervention_and_midterm_grade_by_gender(engaged: bool = False):
+    if engaged: 
+        df_engaged = META_1_AND_MIDTERM_ENGAGED
+        df = META_1_AND_MIDTERM
+    else:
+        df = META_1_AND_MIDTERM
+        df_engaged = df
+
+    grades_stress_yes = df_engaged.loc[df_engaged["show_stress"] == "yes"]
     grades_stress_no = df.loc[df["show_stress"] == "no"]
 
     grades_stress_yes_male = grades_stress_yes.loc[grades_stress_yes["gender"] == "Male"]
