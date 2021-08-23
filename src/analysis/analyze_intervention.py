@@ -45,9 +45,9 @@ def drop_low_time(df: pd.DataFrame, time_col: str, min_time: int = 0.1) -> pd.Da
     return df.loc[df[time_col] >= min_time]
 
 if __name__ == "__main__":
-    grades_fpath = "data/interim/cleaned_grades.csv"
-    metaskills_fpath = "data/interim/cleaned_metaskills_1.csv"
-    midterm_survey_fpath = "data/interim/cleaned_midterm_survey.csv"
+    grades_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_grades.csv"
+    metaskills_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_metaskills_1.csv"
+    midterm_survey_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_midterm_survey.csv"
 
     df = join_w_grades(grades_fpath, metaskills_fpath)
     #df_midterm_survey = pd.read_csv(midterm_survey_fpath)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     print(mannwhitneyu(grades_daily_yes, grades_daily_no))
     print(mannwhitneyu(grades_enjoyed, grades_not_enjoyed))
     assert False
-    
+
 
     print(grades_stress_A.mean())
     print(grades_stress_A.std())
