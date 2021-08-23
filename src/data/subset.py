@@ -3,10 +3,10 @@ import pdb
 
 from src.analysis.analyze_intervention import join_w_grades, compare_treatment, drop_unfinished, drop_after_midterm, drop_low_time
 
-grades_fpath = "data/interim/cleaned_grades.csv"
-metaskills_fpath = "data/interim/cleaned_metaskills_1.csv"
-metaskills_2_fpath = "data/interim/cleaned_metaskills_2.csv"
-midterm_survey_fpath = "data/interim/cleaned_midterm_survey.csv"
+grades_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_grades.csv"
+metaskills_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_metaskills_1.csv"
+metaskills_2_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_metaskills_2.csv"
+midterm_survey_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_midterm_survey.csv"
 
 df = join_w_grades(grades_fpath, metaskills_fpath)
 df = drop_unfinished(df, "Finished")
@@ -84,15 +84,15 @@ def stress_intervention_and_stress_question(divide_by_year: bool = False, engage
 
     grades_stress_yes = grades_stress_yes.dropna(subset=["Q51_y"])
     grades_stress_yes["Q51_y"] = grades_stress_yes["Q51_y"].apply(lambda x: '0' if 'not troubled' in x else x)
-    grades_stress_yes["Q51_y"] = grades_stress_yes["Q51_y"].apply(lambda x: '10' if 'very troubled' in x else x)  
+    grades_stress_yes["Q51_y"] = grades_stress_yes["Q51_y"].apply(lambda x: '10' if 'very troubled' in x else x)
     grades_stress_yes_first_year = grades_stress_yes.loc[grades_stress_yes["Q216"] == "1"]
     grades_stress_yes_upper_year = grades_stress_yes.loc[grades_stress_yes["Q216"] != "1"]
 
     grades_stress_no = grades_stress_no.dropna(subset=["Q51_y"])
     grades_stress_no["Q51_y"] = grades_stress_no["Q51_y"].apply(lambda x: '0' if 'not troubled' in x else x)
-    grades_stress_no["Q51_y"] = grades_stress_no["Q51_y"].apply(lambda x: '10' if 'very troubled' in x else x) 
+    grades_stress_no["Q51_y"] = grades_stress_no["Q51_y"].apply(lambda x: '10' if 'very troubled' in x else x)
     grades_stress_no_first_year = grades_stress_no.loc[grades_stress_no["Q216"] == "1"]
-    grades_stress_no_upper_year = grades_stress_no.loc[grades_stress_no["Q216"] != "1"] 
+    grades_stress_no_upper_year = grades_stress_no.loc[grades_stress_no["Q216"] != "1"]
 
     stress_answers_yes_first_year = grades_stress_yes_first_year["Q51_y"].astype(int)
     stress_answers_no_first_year = grades_stress_no_first_year["Q51_y"].astype(int)
@@ -104,7 +104,7 @@ def stress_intervention_and_stress_question(divide_by_year: bool = False, engage
 
     if divide_by_year:
         return stress_answers_yes_first_year, stress_answers_no_first_year, stress_answers_yes_upper_year, stress_answers_no_upper_year
-    
+
     return stress_answers_yes, stress_answers_no
 
 def enjoyment_and_midterm_grade(divide_by_year: bool = False) -> tuple:
@@ -117,7 +117,7 @@ def stress_intervention_and_midterm_grade_by_language_ability():
     raise NotImplementedError
 
 def stress_intervention_and_midterm_grade_by_gender(engaged: bool = False):
-    if engaged: 
+    if engaged:
         df_engaged = META_1_AND_MIDTERM_ENGAGED
         df = META_1_AND_MIDTERM
     else:
@@ -135,7 +135,7 @@ def stress_intervention_and_midterm_grade_by_gender(engaged: bool = False):
 
     grades_stress_yes_male = grades_stress_yes_male["Midterm Current Score"].dropna().astype(int)
     grades_stress_yes_female = grades_stress_yes_female["Midterm Current Score"].dropna().astype(int)
-    
+
     grades_stress_no_male = grades_stress_no_male["Midterm Current Score"].dropna().astype(int)
     grades_stress_no_female = grades_stress_no_female["Midterm Current Score"].dropna().astype(int)
 

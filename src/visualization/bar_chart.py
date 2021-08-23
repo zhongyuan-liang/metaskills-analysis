@@ -39,7 +39,7 @@ def bar_chart(title: str, filename: str, **group_data: pd.Series) -> None:
         sems.append(sem)
         rect = ax.bar(x_loc[i], mean, BAR_WIDTH, yerr=sem, capsize=2.0)
         rects.append(rect)
-    
+
     label_on_bar(ax, rects, sample_size, means, sems)
 
     ax.set_ylabel("Average Stress Level")
@@ -64,18 +64,18 @@ def label_on_bar(ax: matplotlib.axes.Axes, rects: matplotlib.container.BarContai
 
 if __name__ == "__main__":
     grades_stress_yes_male, grades_stress_no_male, grades_stress_yes_female, grades_stress_no_female = stress_intervention_and_midterm_grade_by_gender()
-    total_students = len(grades_stress_yes_female) +  len(grades_stress_no_female) 
+    total_students = len(grades_stress_yes_female) +  len(grades_stress_no_female)
     _, p_val = mannwhitneyu(grades_stress_yes_female, grades_stress_no_female)
-    bar_chart(f"Average Midterm grade\n based on stress intervention for female students\n(N={total_students}, p={p_val})","stress_female.png", **{"Received stress intervention female": grades_stress_yes_female, 
-    #"Received stress intervention female": grades_stress_yes_female, 
+    bar_chart(f"Average Midterm grade\n based on stress intervention for female students\n(N={total_students}, p={p_val})","stress_female.png", **{"Received stress intervention female": grades_stress_yes_female,
+    #"Received stress intervention female": grades_stress_yes_female,
     "Did not receive \nstress intervention female": grades_stress_no_female, })
     print(cohens_d(grades_stress_yes_female, grades_stress_no_female))
     #"Did not receive \nstress intervention female": grades_stress_no_female})
     assert False
-    grades_fpath = "data/interim/cleaned_grades.csv"
-    metaskills_fpath = "data/interim/cleaned_metaskills_1.csv"
-    metaskills_2_fpath = "data/interim/cleaned_metaskills_2.csv"
-    midterm_survey_fpath = "data/interim/cleaned_midterm_survey.csv"
+    grades_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_grades.csv"
+    metaskills_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_metaskills_1.csv"
+    metaskills_2_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_metaskills_2.csv"
+    midterm_survey_fpath = "D:/metaskills-analysis-main/metaskills-analysis-main/src/data/interim/cleaned_midterm_survey.csv"
 
     df = join_w_grades(grades_fpath, metaskills_fpath)
     df = drop_unfinished(df, "Finished")
@@ -105,15 +105,15 @@ if __name__ == "__main__":
 
     grades_stress_yes = grades_stress_yes.dropna(subset=["Q51_y"])
     grades_stress_yes["Q51_y"] = grades_stress_yes["Q51_y"].apply(lambda x: '0' if 'not troubled' in x else x)
-    grades_stress_yes["Q51_y"] = grades_stress_yes["Q51_y"].apply(lambda x: '10' if 'very troubled' in x else x)  
+    grades_stress_yes["Q51_y"] = grades_stress_yes["Q51_y"].apply(lambda x: '10' if 'very troubled' in x else x)
     grades_stress_yes_first_year = grades_stress_yes.loc[grades_stress_yes["Q216"] == "1"]
     grades_stress_yes_upper_year = grades_stress_yes.loc[grades_stress_yes["Q216"] != "1"]
 
     grades_stress_no = grades_stress_no.dropna(subset=["Q51_y"])
     grades_stress_no["Q51_y"] = grades_stress_no["Q51_y"].apply(lambda x: '0' if 'not troubled' in x else x)
-    grades_stress_no["Q51_y"] = grades_stress_no["Q51_y"].apply(lambda x: '10' if 'very troubled' in x else x) 
+    grades_stress_no["Q51_y"] = grades_stress_no["Q51_y"].apply(lambda x: '10' if 'very troubled' in x else x)
     grades_stress_no_first_year = grades_stress_no.loc[grades_stress_no["Q216"] == "1"]
-    grades_stress_no_upper_year = grades_stress_no.loc[grades_stress_no["Q216"] != "1"] 
+    grades_stress_no_upper_year = grades_stress_no.loc[grades_stress_no["Q216"] != "1"]
 
     stress_answers_yes_first_year = grades_stress_yes_first_year["Q51_y"].astype(int)
     stress_answers_no_first_year = grades_stress_no_first_year["Q51_y"].astype(int)
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     bar_chart(f"Average Stress Level (0-10)\n based on stress intervention for first-year students\n(N={total_students}, p={p_val_stress})", "stress_q51_first_year.png", **{"Received stress intervention": stress_answers_yes_first_year, "Did not receive \nstress intervention": stress_answers_no_first_year})
 
     assert False
-    
+
     grades_stress_yes, grades_stress_no = grades_stress_yes.dropna(subset=["Q216", "Midterm Current Score"]), grades_stress_no.dropna(subset=["Q216", "Midterm Current Score"])
 
     stress_first_year = grades_stress_yes.loc[grades_stress_yes["Q216"] == "1"]["Midterm Current Score"]
@@ -136,17 +136,17 @@ if __name__ == "__main__":
     no_stress_other = grades_stress_no.loc[grades_stress_no["Q216"] != "1"]["Midterm Current Score"]
 
     #total_students = len(stress_first_year) + len(stress_other) + len(no_stress_first_year) + len(no_stress_other)
-    total_students = len(stress_other) + len(no_stress_other) 
+    total_students = len(stress_other) + len(no_stress_other)
     #_, p_val_grades = kruskal(stress_first_year, stress_other, no_stress_first_year, no_stress_other)
     _, p_val_grades = mannwhitneyu(stress_other, no_stress_other)
-    
+
     cohens_d = (stress_first_year.mean() - no_stress_first_year.mean()) / (sqrt((stress_first_year.std() ** 2 + no_stress_first_year.std() ** 2) / 2))
     print(cohens_d)
     bar_chart(f"Average Midterm Grade for upper-year students\n based on stress intervention\n(N={total_students}, p={p_val_grades})", "upper_year_stress.png", **{"Received stress intervention": stress_other, "Did not receive\nstress intervention": no_stress_other})
 
     assert False
 
-    
+
 
     A_only = df.loc[
         (((df["stress_A"] == "yes") &
@@ -154,7 +154,7 @@ if __name__ == "__main__":
         ((df["stress_C"] == "no") &
         (df["stress_D"] == "no"))) &
         ((df["stress_E"] == "no") &
-        (df["stress_F"] == "no")) 
+        (df["stress_F"] == "no"))
     ] #syntax ew
     B_only = df.loc[
         (((df["stress_A"] == "no") &
@@ -162,40 +162,40 @@ if __name__ == "__main__":
         ((df["stress_C"] == "no") &
         (df["stress_D"] == "no"))) &
         ((df["stress_E"] == "no") &
-        (df["stress_F"] == "no")) 
-    ] 
+        (df["stress_F"] == "no"))
+    ]
     C_only = df.loc[
         (((df["stress_A"] == "no") &
         (df["stress_B"] == "no") ) &
         ((df["stress_C"] == "yes") &
         (df["stress_D"] == "no"))) &
         ((df["stress_E"] == "no") &
-        (df["stress_F"] == "no")) 
-    ] 
+        (df["stress_F"] == "no"))
+    ]
     D_only = df.loc[
         (((df["stress_A"] == "no") &
         (df["stress_B"] == "no") ) &
         ((df["stress_C"] == "no") &
         (df["stress_D"] == "yes"))) &
         ((df["stress_E"] == "no") &
-        (df["stress_F"] == "no")) 
-    ] 
+        (df["stress_F"] == "no"))
+    ]
     E_only = df.loc[
         (((df["stress_A"] == "no") &
         (df["stress_B"] == "no") ) &
         ((df["stress_C"] == "no") &
         (df["stress_D"] == "no"))) &
         ((df["stress_E"] == "yes") &
-        (df["stress_F"] == "no")) 
-    ] 
+        (df["stress_F"] == "no"))
+    ]
     F_only = df.loc[
         (((df["stress_A"] == "no") &
         (df["stress_B"] == "no") ) &
         ((df["stress_C"] == "no") &
         (df["stress_D"] == "no"))) &
         ((df["stress_E"] == "no") &
-        (df["stress_F"] == "yes")) 
-    ] 
+        (df["stress_F"] == "yes"))
+    ]
 
     stress_A_grades = stress_A["Midterm Current Score"].dropna()
     stress_C_grades = stress_C["Midterm Current Score"].dropna()
